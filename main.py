@@ -1,28 +1,12 @@
 from flask import Flask, request, jsonify
 from textblob import TextBlob
 from googletrans import Translator
-import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+import pickle
 
-
-# carregamento dos dados
-df = pd.read_csv('casas.csv')
-
-# definindo a ordem de recebimento dos dados
+# Usando modelo serializado
 colunas = ['tamanho', 'ano', 'garagem']
-
-# separando variavel dependente e independente
-X = df.drop('preco', axis = 1)
-y = df['preco']
-
-# separacao treino e teste
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 42)
-
-# treinamento do modelo
-modelo = LinearRegression()
-modelo.fit(X_train, y_train)
-
+modelo = pickle.load(open('modelo.sav', 'rb'))
 
 # cria uma instancia da aplicacao flask
 app = Flask(__name__)
