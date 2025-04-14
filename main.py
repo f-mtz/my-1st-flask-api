@@ -48,7 +48,7 @@ def sentimento(frase):
 @app.route('/cotacao/<int:tamanho>')
 def cotacao(tamanho):
     preco = modelo.predict([[tamanho]])
-    formatted_prediction = "R$ {:,.2f}".format(preco[0])
+    formatted_prediction = "R$ {:,.2f}".format(preco[0]).replace(",", "X").replace(".", ",").replace("X", ".")
 
     return str(formatted_prediction)
 
