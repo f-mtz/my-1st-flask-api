@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_basicauth import BasicAuth
 from textblob import TextBlob
 from googletrans import Translator
 from sklearn.linear_model import LinearRegression
@@ -10,6 +11,10 @@ modelo = pickle.load(open('modelo.sav', 'rb'))
 
 # cria uma instancia da aplicacao flask
 app = Flask(__name__)
+app.config['BASIC_AUTH_USERNAME'] = 'admin'
+app.config['BASIC_AUTH_PASSWORD'] = 'admin'
+
+basic_auth = BasicAuth(app)
 
 # definindo a rota raiz
 @app.route('/')
@@ -18,6 +23,7 @@ def home():
 
 
 @app.route('/sentimento/<frase>')
+@basic_auth.required
 def sentimento(frase):
     tradutor = Translator()
     traducao = tradutor.translate(frase, src='pt', dest='en')
