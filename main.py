@@ -36,6 +36,7 @@ def sentimento(frase):
 
 
 @app.route('/cotacao/', methods=['POST'])
+@basic_auth.required
 def cotacao():
     dados = request.get_json() # recendo dados do payload json
     dados_input = [dados[col] for col in colunas] # criando lista dos dados na ordem que o modelo de regressão espera receber
