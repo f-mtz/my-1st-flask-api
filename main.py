@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from textblob import TextBlob
 from googletrans import Translator
 import pandas as pd
@@ -9,9 +9,8 @@ from sklearn.linear_model import LinearRegression
 # carregamento dos dados
 df = pd.read_csv('casas.csv')
 
-# definindo variaveis na regressão
-colunas = ['tamanho', 'preco']
-df = df[colunas]
+# definindo a ordem de recebimento dos dados
+colunas = ['tamanho', 'ano', 'garagem']
 
 # separando variavel dependente e independente
 X = df.drop('preco', axis = 1)
@@ -45,12 +44,17 @@ def sentimento(frase):
     return "polaridade: {}".format(polaridade)
 
 
-@app.route('/cotacao/<int:tamanho>')
-def cotacao(tamanho):
-    preco = modelo.predict([[tamanho]])
+
+@app.route('/cotacao/', methods=['POST'])
+def cotacao():
+    dados = request.get_json() # recendo dados do payload json
+    dados_input = [dados[col] for col in colunas] # criando lista dos dados na ordem que o modelo de regressão espera receber
+    preco = modelo.predict([dados_input])
     formatted_prediction = "R$ {:,.2f}".format(preco[0]).replace(",", "X").replace(".", ",").replace("X", ".")
 
-    return str(formatted_prediction)
+    return jsonify(preco=formatted_prediction) # str(formatted_prediction)
+
+
 
 
 # executa a API localhost na orta padrão 5000
