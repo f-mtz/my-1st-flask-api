@@ -4,15 +4,24 @@ from textblob import TextBlob
 from googletrans import Translator
 from sklearn.linear_model import LinearRegression
 import pickle
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()  # Carrega o .env automaticamente
 
 # Usando modelo serializado
 colunas = ['tamanho', 'ano', 'garagem']
-modelo = pickle.load(open('modelo.sav', 'rb'))
+modelo = pickle.load(open('../../models/modelo.sav', 'rb'))
 
 # cria uma instancia da aplicacao flask
 app = Flask(__name__)
-app.config['BASIC_AUTH_USERNAME'] = 'admin'
-app.config['BASIC_AUTH_PASSWORD'] = 'admin'
+app.config['BASIC_AUTH_USERNAME'] = os.getenv('BASIC_AUTH_USERNAME') # os.environ.get('BASIC_AUTH_USERNAME')
+app.config['BASIC_AUTH_PASSWORD'] = os.getenv('BASIC_AUTH_PASSWORD') # os.environ.get('BASIC_AUTH_PASSWORD')
+
+
+print(os.getenv('BASIC_AUTH_USERNAME'))
+print(os.getenv('BASIC_AUTH_PASSWORD'))
 
 basic_auth = BasicAuth(app)
 
@@ -48,6 +57,6 @@ def cotacao():
 
 
 
-# executa a API localhost na orta padrão 5000
-app.run(debug=True)
+# executa a API localhost na porta padrão 5000
+app.run(debug=True, host='0.0.0.0')
 
