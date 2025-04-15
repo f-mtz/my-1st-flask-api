@@ -12,7 +12,7 @@ load_dotenv()  # Carrega o .env automaticamente
 
 # Usando modelo serializado
 colunas = ['tamanho', 'ano', 'garagem']
-modelo = pickle.load(open('../../models/modelo.sav', 'rb'))
+modelo = pickle.load(open('models/modelo.sav', 'rb'))
 
 # cria uma instancia da aplicacao flask
 app = Flask(__name__)
@@ -28,7 +28,7 @@ basic_auth = BasicAuth(app)
 # definindo a rota raiz
 @app.route('/')
 def home():
-    return "Minha primeira API."
+    return "Minha primeira API no Docker."
 
 
 @app.route('/sentimento/<frase>')
