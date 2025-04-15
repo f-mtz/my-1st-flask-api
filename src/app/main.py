@@ -43,6 +43,41 @@ def sentimento(frase):
     return "polaridade: {}".format(polaridade)
 
 
+@app.route('/sentimento2/', methods=['POST'])
+@basic_auth.required
+def sentimento2():
+    try:
+        # Recebe o JSON do payload
+        data = request.get_json()
+        
+        if not data or 'frase' not in data:
+            return jsonify({"erro": "Payload inválido. Envie {'frase': 'texto'}"}), 400
+        
+        frase = data['frase']
+        
+        # Tradução
+        tradutor = Translator()
+        traducao = tradutor.translate(frase, src='pt', dest='en')
+        frase_english = traducao.text
+        
+        # Análise de sentimento
+        tb_en = TextBlob(frase_english)
+        polaridade = tb_en.sentiment.polarity
+        
+        # Resposta de sucesso
+        return jsonify({
+            "frase_original": frase,
+            "frase_traduzida": frase_english,
+            "polaridade": polaridade,
+            "status": "sucesso"
+        })
+        
+    except Exception as e:
+        # Captura qualquer erro inesperado
+        return jsonify({
+            "erro": str(e),
+            "status": "falha"
+        }), 500
 
 @app.route('/cotacao/', methods=['POST'])
 @basic_auth.required
