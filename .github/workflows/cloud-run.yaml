@@ -90,12 +90,13 @@ on:
       - $default_branch
 
 env:
-  PROJECT_ID: YOUR_PROJECT_ID # TODO: update Google Cloud project id
+  PROJECT_ID: ${{ secrets. }} # TODO: update Google Cloud project id
   GAR_LOCATION: YOUR_GAR_LOCATION # TODO: update Artifact Registry location
-  REGION: YOUR_APP_REGION # TODO: update Cloud Run service region
+  REGION: southamerica-east1 # TODO: update Cloud Run service region
+  SERVICE_NAME: ml-api3
   APP: app
-  BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME}}
-  BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD}}
+  BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
+  BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
 
 jobs:
   deploy:
